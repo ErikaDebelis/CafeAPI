@@ -8,6 +8,17 @@ using Cafe.Models;
 
 namespace Cafe.Controllers
 {
+  public class PaginationModel
+  {
+    public List<Drink> Data { get; set; }
+    public int Total { get; set; }
+    public int PerPage { get; set; }
+    public int Page { get; set; }
+
+    public string PreviousPage { get; set; }
+    public string NextPage { get; set; }
+  }
+
   [Route("api/[controller]")]
   [ApiController]
   public class DrinksController : ControllerBase
@@ -17,8 +28,10 @@ namespace Cafe.Controllers
     {
       _db = db;
     }
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Drink>>> Get(string name, string description, string temp, int price )
+    public async Task<ActionResult<PaginationModel>> Get(string name, string description, string temp, int price, int page, int perPage)
+    // public async Task<ActionResult<IEnumerable<Drink>>> Get(string name, string description, string temp, int price)
     {
       var query = _db.Drinks.AsQueryable();
       if (name != null)
@@ -37,7 +50,43 @@ namespace Cafe.Controllers
       {
         query = query.Where(entry => entry.Price == price);
       }
-      return await query.ToListAsync();
+
+      // return 2 items at a time
+      List<Drink> drinks = await query.ToListAsync();
+      // data, the items being returns
+      // total, the total number of items before we did pagination
+      // current "page", the slice you're in
+      // the number of items per page
+
+      if (perPage == 0) perPage = 2;
+
+      int total = drinks.Count;
+      // 5, page = 2 we get an error
+
+      // startIndex = page * 2
+      // endIndex = (page * 2) + 1
+
+      List<Drink> drinksPage = new List<Drink>();
+
+      if ((page * 2) + 1 < total)
+      {
+        drinksPage = drinks.GetRange(page * 2, 2);
+      }
+
+      if ((page * 2) + 1 == total)
+      {
+        drinksPage = drinks.GetRange(page * 2, 1);
+      }
+
+      return new PaginationModel()
+      {
+        Data = drinksPage,
+        Total = total,
+        PerPage = perPage,
+        Page = page,
+        PreviousPage = $"/api/drinks?page={page - 1}",
+        NextPage = $"/api/drinks?page={page + 1}",
+      };
     }
 
     [HttpGet("{id}")]
