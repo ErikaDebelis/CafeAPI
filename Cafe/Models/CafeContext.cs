@@ -17,7 +17,7 @@ namespace Cafe.Models
           new Drink { DrinkId = 2, Name = "Iced Coffee", Description = "Handcrafted in small batches daily, slow-steeped in cool water for 20 hours. Made from our custom blend of beans grown to steep long and cold for a super-smooth flavor.", Temp = "Cold", Price = 4 },
           new Drink { DrinkId = 3, Name = "Iced Latte", Description = "Our dark, rich espresso combined with milk and served over ice. A perfect milk-forward cooldown.", Temp = "Cold", Price = 5 },
           new Drink { DrinkId = 4, Name = "Matcha Latte", Description = "Smooth and creamy matcha sweetened just right and served with steamed milk. This favorite will transport your senses to pure green delight.", Temp = "Hot", Price = 3 },
-          new Drink { DrinkId = 5, Name = "Iced Passionfruit Green Tea", Description = "This boldly refreshing iced tea is made with a combination of our peach-flavored green tea and lemonade, and hand-shaken with ice.", Temp = "Cold", Price = 2 }
+          new Drink { DrinkId = 5, Name = "Iced Peach Green Tea", Description = "This boldly refreshing iced tea is made with a combination of our peach-flavored green tea and lemonade, and hand-shaken with ice.", Temp = "Cold", Price = 2 }
         );
       builder.Entity<Food>()
         .HasData(
