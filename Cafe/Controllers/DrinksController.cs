@@ -51,31 +51,21 @@ namespace Cafe.Controllers
         query = query.Where(entry => entry.Price == price);
       }
 
-      // return 2 items at a time
       List<Drink> drinks = await query.ToListAsync();
-      // data, the items being returns
-      // total, the total number of items before we did pagination
-      // current "page", the slice you're in
-      // the number of items per page
 
       if (perPage == 0) perPage = 2;
 
       int total = drinks.Count;
-      // 5, page = 2 we get an error
-
-      // startIndex = page * 2
-      // endIndex = (page * 2) + 1
-
       List<Drink> drinksPage = new List<Drink>();
 
-      if ((page * 2) + 1 < total)
+      if (page < (total / perPage))
       {
-        drinksPage = drinks.GetRange(page * 2, 2);
+        drinksPage = drinks.GetRange(page * perPage, perPage);
       }
 
-      if ((page * 2) + 1 == total)
+      if (page == (total / perPage))
       {
-        drinksPage = drinks.GetRange(page * 2, 1);
+        drinksPage = drinks.GetRange(page * perPage, total - (page * perPage));
       }
 
       return new PaginationModel()
@@ -84,7 +74,7 @@ namespace Cafe.Controllers
         Total = total,
         PerPage = perPage,
         Page = page,
-        PreviousPage = $"/api/drinks?page={page - 1}",
+        PreviousPage = page == 0 ? $"/api/drinks?page={page}" : $"/api/drinks?page={page - 1}",
         NextPage = $"/api/drinks?page={page + 1}",
       };
     }
