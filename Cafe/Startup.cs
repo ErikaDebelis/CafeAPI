@@ -27,6 +27,7 @@ namespace Cafe
 
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddDbContext<DrinkDbContext>(options => options.UseInMemoryDatabase("DrinkDb"));
       services.AddCors(options =>
       {
         options.AddDefaultPolicy(

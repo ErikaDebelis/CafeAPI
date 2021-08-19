@@ -5,9 +5,7 @@ namespace Cafe.Models
   public class CafeContext : DbContext
   {
     public CafeContext(DbContextOptions<CafeContext> options)
-      : base(options)
-    {
-    }
+      : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
