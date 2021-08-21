@@ -27,7 +27,6 @@ namespace Cafe
 
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddDbContext<DrinkDbContext>(options => options.UseInMemoryDatabase("DrinkDb"));
       services.AddCors(options =>
       {
         options.AddDefaultPolicy(
@@ -65,12 +64,9 @@ namespace Cafe
       }
 
       // app.UseHttpsRedirection();
-
       app.UseRouting();
       app.UseCors();
-
       app.UseAuthorization();
-
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();

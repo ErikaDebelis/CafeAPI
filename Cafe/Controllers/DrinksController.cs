@@ -8,16 +8,6 @@ using Cafe.Models;
 
 namespace Cafe.Controllers
 {
-  public class PaginationModel
-  {
-    public List<Drink> Data { get; set; }
-    public int Total { get; set; }
-    public int PerPage { get; set; }
-    public int Page { get; set; }
-
-    public string PreviousPage { get; set; }
-    public string NextPage { get; set; }
-  }
 
   [Route("api/[controller]")]
   [ApiController]
@@ -31,7 +21,6 @@ namespace Cafe.Controllers
 
     [HttpGet]
     public async Task<ActionResult<PaginationModel>> Get(string name, string description, string temp, int price, int page, int perPage)
-    // public async Task<ActionResult<IEnumerable<Drink>>> Get(string name, string description, string temp, int price)
     {
       var query = _db.Drinks.AsQueryable();
       if (name != null)
@@ -70,7 +59,7 @@ namespace Cafe.Controllers
 
       return new PaginationModel()
       {
-        Data = drinksPage,
+        DrinkData = drinksPage,
         Total = total,
         PerPage = perPage,
         Page = page,

@@ -19,7 +19,7 @@ namespace Cafe.Controllers
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Food>>> Get(string name, string description, string temp, int price )
+    public async Task<ActionResult<PaginationModel>> Get(string name, string description, string temp, int price, int page, int perPage)
     {
       var query = _db.Foods.AsQueryable();
       if (name != null)
@@ -38,7 +38,33 @@ namespace Cafe.Controllers
       {
         query = query.Where(entry => entry.Price == price);
       }
-      return await query.ToListAsync();
+
+      List<Food> foods = await query.ToListAsync();
+
+      if (perPage == 0) perPage = 2;
+
+      int total = foods.Count;
+      List<Food> foodsPage = new List<Food>();
+
+      if (page < (total / perPage))
+      {
+        foodsPage = foods.GetRange(page * perPage, perPage);
+      }
+
+      if (page == (total / perPage))
+      {
+        foodsPage = foods.GetRange(page * perPage, total - (page * perPage));
+      }
+
+      return new PaginationModel()
+      {
+        FoodData = foodsPage,
+        Total = total,
+        PerPage = perPage,
+        Page = page,
+        PreviousPage = page == 0 ? $"/api/foods?page={page}" : $"/api/foods?page={page - 1}",
+        NextPage = $"/api/foods?page={page + 1}",
+      };
     }
 
     [HttpGet("{id}")]
